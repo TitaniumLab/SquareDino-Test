@@ -1,0 +1,65 @@
+using DG.Tweening;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using Zenject;
+
+public class PlayerMovement : MonoBehaviour, IMoveble
+{
+    private NavMeshAgent _agent;
+    [SerializeField] private Transform _startPoint;
+    [Header("Parent of waypoints")]
+    [SerializeField] private Transform _destinationPoints;
+    private List<Transform> _points = new List<Transform>();
+    private int _totalPoints;
+    public Transform CurrentPoint { get; private set; }
+    [SerializeField] private int _currentPointIndex = 0;
+    private Tween _tween;
+
+    private void Start()
+    {
+        Waypoint.OnPointEnter += StopToShoot;
+        Waypoint.OnPointComplete += ToNextPoint;
+        GameController.OnStart += SetCurrentPoint;
+        transform.position = _startPoint.position;
+        _totalPoints = _destinationPoints.childCount;
+        for (int i = 0; i < _totalPoints; i++)
+        {
+            _points.Add(_destinationPoints.GetChild(i));
+        }
+        _agent = GetComponent<NavMeshAgent>();
+
+    }
+
+
+    private void OnDestroy()
+    {
+        Waypoint.OnPointEnter -= StopToShoot;
+        Waypoint.OnPointComplete -= ToNextPoint;
+        GameController.OnStart -= SetCurrentPoint;
+    }
+
+    private void StopToShoot()
+    {
+        _agent.isStopped = true;
+        _tween?.Kill(true);
+        _tween = transform.DORotate(CurrentPoint.transform.rotation.eulerAngles, 0.5f);
+    }
+
+    private void ToNextPoint()
+    {
+        _currentPointIndex++;
+        _agent.isStopped = false;
+        if (_currentPointIndex < _totalPoints)
+            SetCurrentPoint();
+    }
+
+    private void SetCurrentPoint()
+    {
+        CurrentPoint = _points[_currentPointIndex];
+        _agent.destination = CurrentPoint.position;
+    }
+
+
+}
