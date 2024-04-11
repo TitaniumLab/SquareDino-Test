@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour, IMoveble
     private int _totalPoints;
     public Transform CurrentPoint { get; private set; }
     [SerializeField] private int _currentPointIndex = 0;
+    [SerializeField] private float _arriveRotationTime = 0.5f;
     private Tween _tween;
     public event Action OnMove;
     public event Action OnStop;
@@ -45,7 +46,7 @@ public class PlayerMovement : MonoBehaviour, IMoveble
         _agent.isStopped = true;
         _tween?.Kill(true);
         OnStop();
-        _tween = transform.DORotate(CurrentPoint.transform.rotation.eulerAngles, 0.5f);
+        _tween = transform.DORotate(CurrentPoint.transform.rotation.eulerAngles, _arriveRotationTime);
     }
 
     private void ToNextPoint()
