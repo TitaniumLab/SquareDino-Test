@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Zenject;
-using Zenject.SpaceFighter;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
@@ -31,9 +28,8 @@ public class Bullet : MonoBehaviour
         if (!other.TryGetComponent(out Bullet bullet))
         {
             if (other.TryGetComponent(out IDamageable doDamage))
-            {
                 doDamage.TakeDamage(_shooting.Damage);
-            }
+            
             _pool.Release(this);
         }
 

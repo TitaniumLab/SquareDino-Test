@@ -7,12 +7,10 @@ public class Health : MonoBehaviour, IDamageable, IHealth
     [field: SerializeField] public int CurrentHealth { get; private set; }
     [SerializeField] private bool _canBeHit = false;
     public event Action OnDeath;
-    public event Action OnHealthChange;
+    public event Action<int> OnHealthChange;
 
-    private void Awake()
-    {
+    private void Awake() =>
         CurrentHealth = MaxHealth;
-    }
 
     public void TakeDamage(int damage)
     {
@@ -20,6 +18,7 @@ public class Health : MonoBehaviour, IDamageable, IHealth
         {
             Debug.Log($"{this.name} take {damage}.");
             CurrentHealth -= damage;
+            OnHealthChange(CurrentHealth);
             if (CurrentHealth <= 0)
             {
                 OnDeath();
@@ -28,8 +27,6 @@ public class Health : MonoBehaviour, IDamageable, IHealth
         }
     }
 
-    public void CanBeHit(bool hit)
-    {
+    public void CanBeHit(bool hit) =>
         _canBeHit = hit;
-    }
 }

@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using Zenject;
 
 public class Waypoint : MonoBehaviour
 {
-    [SerializeField] private IHealth[] _enemiesToDefeat;
+    private IHealth[] _enemiesToDefeat;
     [SerializeField] private int _defeatCount = 0;
     [SerializeField] private int _totalEnemies;
     [SerializeField] private bool _isFinalPoint = false;
@@ -20,9 +17,7 @@ public class Waypoint : MonoBehaviour
         _totalEnemies = _enemiesToDefeat.Length;
 
         foreach (var item in _enemiesToDefeat)
-        {
             item.OnDeath += KillCount;
-        }
     }
 
 
@@ -34,10 +29,9 @@ public class Waypoint : MonoBehaviour
             Debug.Log($"Point \"{this.name}\" arrived.");
             if (_isFinalPoint)
                 OnFinalPoint();
+
             foreach (var item in _enemiesToDefeat)
-            {
                 item.CanBeHit(true);
-            }
         }
     }
 

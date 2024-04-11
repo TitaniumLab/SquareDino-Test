@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.Rendering;
 using Zenject;
 
 public class BulletSpawner : MonoBehaviour, IShooting
@@ -16,10 +13,9 @@ public class BulletSpawner : MonoBehaviour, IShooting
     [field: SerializeField] public float Speed { get; private set; }
     [field: SerializeField] public int Damage { get; private set; }
 
-
-
     [Inject]
     private DiContainer _container;
+
     private void Awake()
     {
         _bulletPool = new ObjectPool<Bullet>(CreateBullet, GetBullet, ReleaseBullet);
